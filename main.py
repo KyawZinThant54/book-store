@@ -2,6 +2,14 @@
 from tkinter import*
 from PIL import  ImageTk,Image
 from custom_button import TkinterCustomButton
+import sqlite3
+import os
+from tkinter import messagebox
+
+#Database connection
+
+with sqlite3.connect("database.db")as db:
+    cur=db.cursor()
 
 #create winodw
 root=Tk()
@@ -17,6 +25,34 @@ root.geometry("{}x{}+0+0".format(window_width,window_height))
 user=StringVar()
 pasd=StringVar()
 
+#==============function===========
+def admin():
+    global option
+    login_window.deiconify()
+    option='Admin'
+
+def employee():
+    global option
+    login_window.deiconify()
+    option='Employe'
+
+def login():
+    username=user.get()
+    password=pasd.get()
+    entry1.delete(0,END)
+    entry2.delete(0,END)
+    
+
+    find_user = 'SELECT * FROM {} WHERE id = ? and password = ?'.format(option)
+
+    print(username, password)
+    cur.execute(find_user, [username, password])
+    results = cur.fetchone()
+    print(results)
+    
+    if results:
+        print('login')
+        
 
 
 #==========================Background_photo================================
@@ -28,16 +64,16 @@ Label(root,image=bg_photo).place(relx=0,rely=0)
 Admin=ImageTk.PhotoImage(Image.open("image\owner.png").resize((200,200)))
 
 #=============admin button==================
-Button1= Button(root,image=Admin,borderwidth=3,bg="#cadbc3").place(relx=0.2, rely=0.3,width=160,height=190)
+Button1= Button(root,image=Admin,borderwidth=3,bg="#cadbc3",command=admin).place(relx=0.2, rely=0.3,width=160,height=190)
 Label(root,text="Admin",font=('Arial', 10),bg="#ede5dd").place(relx=0.2,rely=0.496)
 
 #==============open Employe logo========================
 Employe= ImageTk.PhotoImage(Image.open("image\employ.jpg").resize((200,200)))
 #===================employe botton======================
-Button2= Button(root,image=Employe, borderwidth=3,bg="#cadbc3").place(relx=0.64,rely=0.3,width=160,height=195)
+Button2= Button(root,image=Employe, borderwidth=3,bg="#cadbc3",command=employee).place(relx=0.64,rely=0.3,width=160,height=195)
 Label(root,text="Employe",font=('Arial',10),bg="#ede5dd").place(relx=0.64,rely=0.5)
 
-#======Login winow==========
+#======Login window==========
 login_window=Toplevel(root)
 
 login_window.title("Login")
@@ -72,9 +108,11 @@ entry2.configure(textvariable=pasd)
 
 
 #login button
-Button3=TkinterCustomButton(master=login_window,corner_radius=18,text="LOGIN")
+Button3=TkinterCustomButton(master=login_window,corner_radius=18,text="LOGIN",command=login)
 Button3.place(relx=0.5,rely=0.8, anchor=CENTER)
 
+#hide
+login_window.withdraw()
 
 
 
