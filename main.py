@@ -38,7 +38,7 @@ def employee():
 
 def login():
     username=user.get()
-    password=pasd.get()
+    password=int(pasd.get())
     entry1.delete(0,END)
     entry2.delete(0,END)
     
@@ -52,7 +52,12 @@ def login():
     
     if results:
         print('login')
-        
+        root.withdraw()
+        login_window.withdraw()
+        os.system('python {}.py'.format(option))
+
+    else:
+        messagebox.showerror("Error", "Incorrect usename or password") 
 
 
 #==========================Background_photo================================
