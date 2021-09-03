@@ -5,6 +5,7 @@ from custom_button import TkinterCustomButton
 import sqlite3
 import os
 from tkinter import messagebox
+from tkinter import ttk
 
 #=============DB connection========================
 with sqlite3.connect("database.db") as db:
@@ -33,16 +34,62 @@ new_price=StringVar()
 def search():
     pass
 
+#================backgroundImage===============
+bg_photo=ImageTk.PhotoImage(Image.open("image\BG.jpg").resize((window_width,window_height)))
+#==================place on the window=========================
+Label(root,image=bg_photo).place(relx=0,rely=0)
+
+
+
 def add_item():
-    pass
+    sql_command='''INSERT INTO  Books (ID,Item,Quantity,
+                   price)VALUES(?,?,?,?)'''
+    cur.execute(sql_command,(new_ID.get(),new_item.get(),new_quantity.get(),new_price.get()))
+    db.commit()
+    new_ID.set('')
+    new_item.set('')
+    new_price.set('')
+    new_quantity.set('')
+    show_items()
 
 def remove_item():
-    pass
+    sql_command=''' DELETE FROM Books WHERE id=?'''
+    cur.execute(sql_command,[str(new_ID.get())])
+    db.commit()
+    new_ID.set('')
+    new_item.set('')
+    new_price.set('')
+    new_quantity.set('')
+    show_items()
+
 
 def edit_item():
-    pass
+    sql_command= ''' UPDATE Books SET item=?, quantity=?,
+                     price=? WHERE ID=?'''
+    cur.execute(sql_command,(new_item.get(),new_quantity.get(),new_price.get(),new_ID.get()))
+    db.commit()
+    new_ID.set('')
+    new_item.set('')
+    new_price.set('')
+    new_quantity.set('')
+    show_items()
 
 
+
+def show_items():
+    clear_item()
+    sql_command="SELECT * FROM Books ORDER by quantity ASC"
+    cur.execute(sql_command)
+    data=cur.fetchall()
+    print(data)
+    for num, record in enumerate(data):
+        print(record)
+        my_tree.insert(parent='', index='end',iid=num,values=(record[0], record[1], record[2], record[3]))
+
+
+
+def clear_item():
+    my_tree.delete(*my_tree.get_children())
 #==============Manage Item===========================
 
 Label(root,text="Books",font=('arial', 40, 'bold'),background="red",fg="white").place(relx=0.4,rely=0.07,anchor=W)
@@ -102,6 +149,34 @@ exit_btn = TkinterCustomButton(master=product, corner_radius=20,text="Exit", com
 exit_btn.place(relx=0.81, rely=0.9)
 
 
+#==================Table===========================
+item_aera=Frame(root)
+item_aera.place(relx=0.52,rely=0.12,relwidth=0.5,relheight=0.78 )
+
+my_tree= ttk.Treeview(item_aera,height=10)
+my_tree.place(relx=0, rely=0, relwidth=0.9,relheight=1)
+style= ttk.Style()
+style.configure("Treeview",font="-family {Poppins} -size 12", rowheight=30)
+style.configure("Treeview.Heading", font="-family {Poppins} -size 15")
 
 
+my_tree['columns'] = ('Item-ID', 'Item', 'Quantity', 'Price')
+
+my_tree.column('#0', width=0, minwidth=0, stretch=NO)
+my_tree.column('Item-ID', width=100)
+my_tree.column('Item', width=200)
+my_tree.column('Quantity', width=50)
+my_tree.column('Price', width=50)
+
+
+
+# heading
+my_tree.heading('#0', text='')
+my_tree.heading('Item-ID', text = 'Item ID')
+my_tree.heading('Item', text = 'Item')
+my_tree.heading('Quantity', text = 'In Stock')
+my_tree.heading('Price', text = 'Price')
+
+show_items()
+# loop forever
 root.mainloop()

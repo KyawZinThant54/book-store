@@ -13,6 +13,7 @@ with sqlite3.connect("database.db")as db:
 
 #create winodw
 root=Tk()
+
 root.title("Book store")
 root.iconbitmap("image\logo.ico")
 
