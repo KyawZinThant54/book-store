@@ -34,10 +34,10 @@ new_price=StringVar()
 def search():
     pass
 
-#================backgroundImage===============
-bg_photo=ImageTk.PhotoImage(Image.open("image\BG.jpg").resize((window_width,window_height)))
-#==================place on the window=========================
-Label(root,image=bg_photo).place(relx=0,rely=0)
+# #================backgroundImage===============
+# bg_photo=ImageTk.PhotoImage(Image.open("image\BG.jpg").resize((window_width,window_height)))
+# #==================place on the window=========================
+# Label(root,image=bg_photo).place(relx=0,rely=0)
 
 
 
@@ -151,7 +151,14 @@ exit_btn.place(relx=0.81, rely=0.9)
 
 #==================Table===========================
 item_aera=Frame(root)
-item_aera.place(relx=0.52,rely=0.12,relwidth=0.5,relheight=0.78 )
+item_aera.place(relx=0.52,rely=0.12,relwidth=0.5,relheight=0.78)
+
+# scroll=Frame(root)
+# scroll.pack(pady=20)
+
+
+
+
 
 my_tree= ttk.Treeview(item_aera,height=10)
 my_tree.place(relx=0, rely=0, relwidth=0.9,relheight=1)
@@ -176,6 +183,13 @@ my_tree.heading('Item-ID', text = 'Item ID')
 my_tree.heading('Item', text = 'Item')
 my_tree.heading('Quantity', text = 'In Stock')
 my_tree.heading('Price', text = 'Price')
+
+
+# sb = Scrollbar(my_tree, orient=VERTICAL)
+# sb.pack(side=RIGHT, fill=Y)
+
+# scro.config(yscrollcommand=sb.set)
+# sb.config(command=my_tree.yview)
 
 show_items()
 # loop forever
